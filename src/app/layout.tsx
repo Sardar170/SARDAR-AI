@@ -14,7 +14,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* Aapka baqi saara page content yahan render hoga */}
         {children}
 
         {/* Botpress Integration Webchat Scripts */}
@@ -26,8 +25,8 @@ export default function RootLayout({
           src="https://styler-e59b32.botpress.cloud/webchat/v2.2/bundle.js" 
           strategy="lazyOnload"
           onLoad={() => {
-            if (window.botpress) {
-              window.botpress.init({
+            if ((window as any).botpress) {
+              (window as any).botpress.init({
                 "botId": "05aff31d-5226-4a81-846a-59c4710120a9",
                 "configuration": {
                   "botName": "SARDAR AI",
