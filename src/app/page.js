@@ -4,38 +4,52 @@ import { useEffect } from "react";
 
 export default function Home() {
   useEffect(() => {
-    // 1. First Script (Shareable)
-    const script1 = document.createElement("script");
-    script1.src = "https://cdn.botpress.cloud/webchat/v2.2/shareable.js";
-    script1.async = true;
-    document.body.appendChild(script1);
+    // 1. Botpress Scripts inject karne ka fullproof function
+    const loadBotpress = () => {
+      // Agar pehle se script maujood na ho to hi add karein
+      if (!document.getElementById("botpress-shareable")) {
+        const script1 = document.createElement("script");
+        script1.id = "botpress-shareable";
+        script1.src = "https://cdn.botpress.cloud/webchat/v2.2/shareable.js";
+        script1.async = true;
+        document.head.appendChild(script1);
+      }
 
-    // 2. Second Script (Bundle & Init)
-    const script2 = document.createElement("script");
-    script2.src = "https://styler-e59b32.botpress.cloud/webchat/v2.2/bundle.js";
-    script2.async = true;
-    
-    script2.onload = () => {
-      if (window.botpress) {
-        window.botpress.init({
-          "botId": "05aff31d-5226-4a81-846a-59c4710120a9",
-          "configuration": {
-            "botName": "SARDAR AI",
-            "closeOnEscape": true,
-            "showBotInfoPage": false,
-            "enableConversationDeletion": true
-          }
-        });
+      if (!document.getElementById("botpress-bundle")) {
+        const script2 = document.createElement("script");
+        script2.id = "botpress-bundle";
+        script2.src = "https://styler-e59b32.botpress.cloud/webchat/v2.2/bundle.js";
+        script2.async = true;
+
+        script2.onload = () => {
+          // Jab bundle load ho jaye, checking loop chalayein jab tak window.botpress ready na ho
+          const checkBotpress = setInterval(() => {
+            if (window.botpress && typeof window.botpress.init === "function") {
+              clearInterval(checkBotpress);
+              window.botpress.init({
+                "botId": "05aff31d-5226-4a81-846a-59c4710120a9",
+                "configuration": {
+                  "botName": "SARDAR AI",
+                  "closeOnEscape": true,
+                  "showBotInfoPage": false,
+                  "enableConversationDeletion": true
+                }
+              });
+            }
+          }, 200); // Har 200ms baad check karega jab tak load na ho jaye
+        };
+
+        document.head.appendChild(script2);
       }
     };
 
-    document.body.appendChild(script2);
-
-    return () => {
-      // Cleanup strings when leaving page
-      if (document.body.contains(script1)) document.body.removeChild(script1);
-      if (document.body.contains(script2)) document.body.removeChild(script2);
-    };
+    // Agar document ready ho ya load ho chuka ho
+    if (document.readyState === "complete") {
+      loadBotpress();
+    } else {
+      window.addEventListener("load", loadBotpress);
+      return () => window.removeEventListener("load", loadBotpress);
+    }
   }, []);
 
   return (
