@@ -1,16 +1,11 @@
-import type { Metadata } from "next";
 import Script from "next/script";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "SARDAR AI",
   description: "Professional AI Dashboard",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
@@ -25,8 +20,8 @@ export default function RootLayout({
           src="https://styler-e59b32.botpress.cloud/webchat/v2.2/bundle.js" 
           strategy="lazyOnload"
           onLoad={() => {
-            if ((window as any).botpress) {
-              (window as any).botpress.init({
+            if (window.botpress) {
+              window.botpress.init({
                 "botId": "05aff31d-5226-4a81-846a-59c4710120a9",
                 "configuration": {
                   "botName": "SARDAR AI",
