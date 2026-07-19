@@ -1,9 +1,6 @@
-import Script from "next/script";
+"use client";
 
-export const metadata = {
-  title: "SARDAR AI",
-  description: "Professional AI Dashboard",
-};
+import Script from "next/script";
 
 export default function RootLayout({ children }) {
   return (
